@@ -188,11 +188,8 @@
       ctx.fill();
 
       if(prevEnd){
-        // draw travel line from prevEnd to current start in blue dashed
-        const tx = prevEnd.x;
-        const ty = prevEnd.y;
-        const dx = sx_px - tx;
-        const dy = y_px - ty;
+        const dx = sx_px - prevEnd.x;
+        const dy = y_px - prevEnd.y;
         totalTravelPx += Math.hypot(dx,dy);
       }
 
@@ -226,15 +223,15 @@
 
     // info overlay (run count, estimated travel length in mm)
     ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillRect(6,6,170,44);
+    ctx.fillRect(6,6,200,44);
     ctx.fillStyle = 'white';
     ctx.font = '12px sans-serif';
     const runCount = runs.length;
     const pxPerMm = parseFloat($('pxPerMm').value) || 5;
-    const travelMm = (totalTravelPx / pxPerMm).toFixed(2);
+    const travelMm = (totalTravelPx / pxPerMm).toFixed(02);
     ctx.fillText(`Runs: ${runCount}`, 12, 22);
     ctx.fillText(`Optimized: ${optimize ? 'yes' : 'no'}`, 12, 38);
-    ctx.fillText(`Est. travel: ${travelMm} mm`, 92, 22);
+    ctx.fillText(`Est. travel: ${travelMm} mm`, 120, 22);
 
     ctx.restore();
   }
@@ -344,7 +341,7 @@
       curY = parseFloat(y_mm);
     }
 
-    lines.push('G0 Z' + zTravel.toFixed(303));
+    lines.push('G0 Z' + zTravel.toFixed(3));
     lines.push('G0 X0 Y0');
     if(mode === 'laser') lines.push('M5');
     lines.push('; end');
