@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image → G-code Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Image → G-code</h1>
+
+    <section class="controls">
+      <label>Choose image
+        <input id="imgfile" type="file" accept="image/*" />
+      </label>
+
+      <label>Width (mm)
+        <input id="widthMm" type="number" value="100" min="1" />
+      </label>
+
+      <label>Resolution (px/mm)
+        <input id="pxPerMm" type="number" value="5" min="1" />
+      </label>
+
+      <label>Mode
+        <select id="mode">
+          <option value="pen">Pen/Plotter (Z down/up)</option>
+          <option value="laser">Laser (M3/M5 power)</option>
+        </select>
+      </label>
+
+      <label>Feed (mm/min)
+        <input id="feed" type="number" value="1200" min="10" />
+      </label>
+
+      <label>Travel Z (mm)
+        <input id="zTravel" type="number" value="5" step="0.1" />
+      </label>
+
+      <label>Plunge Z (mm)
+        <input id="zPlunge" type="number" value="-1" step="0.1" />
+      </label>
+
+      <label>Invert image
+        <input id="invert" type="checkbox" />
+      </label>
+
+      <label>Use dithering
+        <input id="dither" type="checkbox" checked />
+      </label>
+
+      <div class="buttons">
+        <button id="previewBtn">Preview</button>
+        <button id="generateBtn">Generate G-code</button>
+        <button id="downloadBtn" disabled>Download .nc</button>
+      </div>
+    </section>
+
+    <section class="preview">
+      <canvas id="canvas"></canvas>
+      <textarea id="gcode" readonly placeholder="Generated G-code will appear here..."></textarea>
+    </section>
+
+    <footer>
+      <p>Example/Compatibility: use with GRBL-based controllers. For laser mode the generator emits M3/M5 and an S power value (0-255). For pen/plotter the generator uses Z up/down moves.</p>
+      <p>Test site inspiration: <a href="https://dimasad.github.io/caex-drawbot-gcode/" target="_blank" rel="noopener">caex-drawbot-gcode</a></p>
+    </footer>
+  </main>
+
+  <script src="gcode-generator.js"></script>
+</body>
+</html>
