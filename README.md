@@ -2,21 +2,19 @@
 
 This adds a small static webpage that converts a dropped image into a simple raster G-code file suitable for pen plotters or laser engravers (GRBL-style commands).
 
-Files added:
-- index.html — the UI
-- gcode-generator.js — client-side logic (image processing & G-code generation)
+Updates in this change:
+- Improved toolpath preview overlay: the preview now draws runs in red with direction arrows, optional dashed blue travel lines between runs (when Optimize paths is enabled), and an information box with run count and estimated travel length.
+- Improved "Optimize paths" option: a simple nearest-neighbour (greedy) ordering is applied to raster runs to reduce travel moves. The preview also visualizes the ordering so you can compare optimized vs non-optimized output before generating G-code.
+- Minor structure and data clarifications: runs now include both pixel and mm coordinates to make previewing and generation consistent.
+
+Files included:
+- index.html — the UI (contains Optimize and Show toolpath options)
+- gcode-generator.js — client-side logic (image processing, dithering, run collection, improved preview overlay and greedy path optimization)
 - style.css — small stylesheet
 
 How to test locally:
 1. Open index.html in a modern browser (Chrome/Edge/Firefox). No server needed.
-2. Choose an image, set Width (mm) and Resolution (px/mm). Click Preview then Generate G-code.
-3. Download the .nc file and send it to your machine. This generator outputs simple raster moves (G0/G1 and Z moves or M3/M5 for laser).
+2. Choose an image, set Width (mm) and Resolution (px/mm). Click Preview to see the dithered image and optional toolpath. Toggle Optimize paths to compare outputs and see travel visualization.
+3. Click Generate G-code and download the .nc file. Verify the generated G-code and test cautiously on hardware.
 
-GitHub Pages:
-- The page is static and works with the default static GitHub Pages workflow. Once pushed to the repository's main branch the typical GitHub Pages action (if enabled) will publish it. You can also serve index.html directly via the repository's Pages settings.
-
-Notes & improvements:
-- This implementation performs a simple Floyd–Steinberg dithering for better raster detail and produces per-row runs to reduce travel moves.
-- The generated G-code is intentionally simple; verify safety (Z heights, feed rates) against your machine before running.
-
-Example site for inspiration: https://dimasad.github.io/caex-drawbot-gcode/
+Safety reminder: verify Z heights, feed rates and power settings before running G-code on hardware.
