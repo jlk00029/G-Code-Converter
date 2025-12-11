@@ -58,6 +58,17 @@
         <input id="showPath" type="checkbox" checked />
       </label>
 
+      <label>Laser power mode
+        <select id="laserPowerMode">
+          <option value="constant">Constant (single S)</option>
+          <option value="grayscale">Grayscale map (per-pixel S)</option>
+        </select>
+      </label>
+
+      <label>Laser max S (0-255)
+        <input id="laserMaxS" type="number" value="255" min="0" max="255" />
+      </label>
+
       <div class="buttons">
         <button id="previewBtn">Preview</button>
         <button id="generateBtn">Generate G-code</button>

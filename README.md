@@ -3,18 +3,18 @@
 This adds a small static webpage that converts a dropped image into a simple raster G-code file suitable for pen plotters or laser engravers (GRBL-style commands).
 
 Updates in this change:
-- Improved toolpath preview overlay: the preview now draws runs in red with direction arrows, optional dashed blue travel lines between runs (when Optimize paths is enabled), and an information box with run count and estimated travel length.
-- Improved "Optimize paths" option: a simple nearest-neighbour (greedy) ordering is applied to raster runs to reduce travel moves. The preview also visualizes the ordering so you can compare optimized vs non-optimized output before generating G-code.
-- Minor structure and data clarifications: runs now include both pixel and mm coordinates to make previewing and generation consistent.
+- Added per-pixel laser power (grayscale mapping) mode. When laser grayscale mode is selected the preview shows a true grayscale image and the generator emits per-pixel M3 S... / M5 commands, mapping image darkness to S (0..laserMaxS).
+- Laser grayscale mode avoids dithering and treats near-white pixels as off to reduce unnecessary laser-on moves. There is still an "Optimize paths" option to reorder runs.
 
-Files included:
-- index.html — the UI (contains Optimize and Show toolpath options)
-- gcode-generator.js — client-side logic (image processing, dithering, run collection, improved preview overlay and greedy path optimization)
-- style.css — small stylesheet
+Files updated:
+- index.html — UI updated with Laser power mode and Laser max S options
+- gcode-generator.js — client-side logic updated to support per-pixel laser power in grayscale mode
+- README.md — notes about the new feature
 
-How to test locally:
-1. Open index.html in a modern browser (Chrome/Edge/Firefox). No server needed.
-2. Choose an image, set Width (mm) and Resolution (px/mm). Click Preview to see the dithered image and optional toolpath. Toggle Optimize paths to compare outputs and see travel visualization.
-3. Click Generate G-code and download the .nc file. Verify the generated G-code and test cautiously on hardware.
+How it works:
+- In "Laser (grayscale)" mode the page keeps the raw grayscale image (0..255), maps darker pixels to higher S values and emits per-pixel movements for runs, switching M3/M5 when the S value changes. This produces variable-power engraving directly from the image grayscale.
 
-Safety reminder: verify Z heights, feed rates and power settings before running G-code on hardware.
+Notes and safety:
+- Per-pixel mode generates many G-code commands (one move per pixel in drawn runs). Use with caution and test on short samples first.
+- Verify your controller supports frequent M3/M5 or S changes; some firmwares expect laser PWM commands handled differently (e.g., using spindle-synchronous modes). This generator uses M3 S<value> / M5 which is commonly supported by GRBL-compatible laser forks.
+- Always test with low power and an emergency stop available.
